@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wuhongyu.mapper.CrmReferMapper" >
+  <resultMap id="BaseResultMap" type="com.wuhongyu.entity.CrmRefer" >
+    <id column="referId" property="referid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="intentionLevel" property="intentionlevel" jdbcType="VARCHAR" />
+    <result column="courseTypeId" property="coursetypeid" jdbcType="VARCHAR" />
+    <result column="classId" property="classid" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="staffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    referId, name, telephone, qq, intentionLevel, courseTypeId, classId, source, status, 
+    remark, staffId, createTime
+  </sql>
+  
+   <sql id="mysql">
+  	refer.referId, refer.name, refer.telephone, refer.qq, refer.createTime, refer.intentionLevel, refer.courseTypeId, refer.classId, 
+    refer.source, refer.status, refer.remark, refer.staffId,coursetype.courseName, class.name className, staff.staffName 
+  </sql>
+  
+  <!-- 自己写的方法 -->
+  <select id="selectAll" resultType="com.wuhongyu.entity.CrmReferCustom">
+ 	select 
+	<include refid="mysql"/>
+	from 
+	crm_refer refer, 
+	crm_course_type coursetype, 
+	crm_class class, 
+	crm_staff staff 
+	where 
+	refer.courseTypeId=coursetype.courseTypeId 
+	and 
+	refer.classId=class.classId 
+	and 
+	refer.staffId=staff.staffId
+	<if test="status!=null and status!=''">
+	and
+	refer.status = #{status}
+	</if>
+	<if test="condition!=null and condition!=''">
+	and(
+		refer.name like "%"#{condition}"%"
+		or 
+		refer.qq like "%"#{condition}"%"
+		or
+		refer.telephone like "%"#{condition}"%"
+	)
+	</if>
+  </select>
+ 
+ 
+  
+  
+  <select id="selectReferById" resultType="com.wuhongyu.entity.CrmReferCustom">
+  select 
+	<include refid="mysql" />
+	from 
+	crm_refer refer, 
+	crm_course_type coursetype, 
+	crm_class class, 
+	crm_staff staff 
+	where 
+	refer.courseTypeId=coursetype.courseTypeId 
+	and 
+	refer.classId=class.classId 
+	and 
+	refer.staffId=staff.staffId
+	and
+	refer.referId=#{referid}
+  </select>
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wuhongyu.entity.CrmReferExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crm_refer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_refer
+    where referId = #{referid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from crm_refer
+    where referId = #{referid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wuhongyu.entity.CrmReferExample" >
+    delete from crm_refer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wuhongyu.entity.CrmRefer" >
+    insert into crm_refer (referId, name, telephone, 
+      qq, intentionLevel, courseTypeId, 
+      classId, source, status, 
+      remark, staffId, createTime
+      )
+    values (#{referid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{intentionlevel,jdbcType=VARCHAR}, #{coursetypeid,jdbcType=VARCHAR}, 
+      #{classid,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{staffid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wuhongyu.entity.CrmRefer" >
+    insert into crm_refer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="referid != null" >
+        referId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="intentionlevel != null" >
+        intentionLevel,
+      </if>
+      <if test="coursetypeid != null" >
+        courseTypeId,
+      </if>
+      <if test="classid != null" >
+        classId,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="staffid != null" >
+        staffId,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="referid != null" >
+        #{referid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="intentionlevel != null" >
+        #{intentionlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="coursetypeid != null" >
+        #{coursetypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wuhongyu.entity.CrmReferExample" resultType="java.lang.Integer" >
+    select count(*) from crm_refer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update crm_refer
+    <set >
+      <if test="record.referid != null" >
+        referId = #{record.referid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.telephone != null" >
+        telephone = #{record.telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qq != null" >
+        qq = #{record.qq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.intentionlevel != null" >
+        intentionLevel = #{record.intentionlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coursetypeid != null" >
+        courseTypeId = #{record.coursetypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classid != null" >
+        classId = #{record.classid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null" >
+        source = #{record.source,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.staffid != null" >
+        staffId = #{record.staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createTime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update crm_refer
+    set referId = #{record.referid,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      telephone = #{record.telephone,jdbcType=VARCHAR},
+      qq = #{record.qq,jdbcType=VARCHAR},
+      intentionLevel = #{record.intentionlevel,jdbcType=VARCHAR},
+      courseTypeId = #{record.coursetypeid,jdbcType=VARCHAR},
+      classId = #{record.classid,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      staffId = #{record.staffid,jdbcType=VARCHAR},
+      createTime = #{record.createtime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wuhongyu.entity.CrmRefer" >
+    update crm_refer
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="intentionlevel != null" >
+        intentionLevel = #{intentionlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="coursetypeid != null" >
+        courseTypeId = #{coursetypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        classId = #{classid,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        staffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where referId = #{referid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wuhongyu.entity.CrmRefer" >
+    update crm_refer
+    set name = #{name,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      intentionLevel = #{intentionlevel,jdbcType=VARCHAR},
+      courseTypeId = #{coursetypeid,jdbcType=VARCHAR},
+      classId = #{classid,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      staffId = #{staffid,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP}
+    where referId = #{referid,jdbcType=VARCHAR}
+  </update>
+</mapper>

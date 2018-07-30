@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wuhongyu.mapper.CrmGraduateMapper" >
+  <resultMap id="BaseResultMap" type="com.wuhongyu.entity.CrmGraduate" >
+    <id column="granduateId" property="granduateid" jdbcType="VARCHAR" />
+    <result column="studentId" property="studentid" jdbcType="VARCHAR" />
+    <result column="companyName" property="companyname" jdbcType="VARCHAR" />
+    <result column="salary" property="salary" jdbcType="VARCHAR" />
+    <result column="post" property="post" jdbcType="VARCHAR" />
+    <result column="entryTime" property="entrytime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="classId" property="classid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    granduateId, studentId, companyName, salary, post, entryTime, remark, classId
+  </sql>
+  
+  <select id="selectAll" resultType="com.wuhongyu.entity.CrmGraduateCustom">
+  	SELECT
+  	graduate.*,
+  	student.name AS studentName,
+  	class.name AS className
+  	FROM
+  	crm_graduate AS graduate
+  	INNER JOIN crm_student AS student ON graduate.studentId = student.studentid
+  	INNER JOIN crm_class AS class ON graduate.classId = class.classId
+  </select>
+  
+  
+  
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wuhongyu.entity.CrmGraduateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crm_graduate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_graduate
+    where granduateId = #{granduateid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from crm_graduate
+    where granduateId = #{granduateid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wuhongyu.entity.CrmGraduateExample" >
+    delete from crm_graduate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wuhongyu.entity.CrmGraduate" >
+    insert into crm_graduate (granduateId, studentId, companyName, 
+      salary, post, entryTime, 
+      remark, classId)
+    values (#{granduateid,jdbcType=VARCHAR}, #{studentid,jdbcType=VARCHAR}, #{companyname,jdbcType=VARCHAR}, 
+      #{salary,jdbcType=VARCHAR}, #{post,jdbcType=VARCHAR}, #{entrytime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{classid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wuhongyu.entity.CrmGraduate" >
+    insert into crm_graduate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="granduateid != null" >
+        granduateId,
+      </if>
+      <if test="studentid != null" >
+        studentId,
+      </if>
+      <if test="companyname != null" >
+        companyName,
+      </if>
+      <if test="salary != null" >
+        salary,
+      </if>
+      <if test="post != null" >
+        post,
+      </if>
+      <if test="entrytime != null" >
+        entryTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="classid != null" >
+        classId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="granduateid != null" >
+        #{granduateid,jdbcType=VARCHAR},
+      </if>
+      <if test="studentid != null" >
+        #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null" >
+        #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="post != null" >
+        #{post,jdbcType=VARCHAR},
+      </if>
+      <if test="entrytime != null" >
+        #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wuhongyu.entity.CrmGraduateExample" resultType="java.lang.Integer" >
+    select count(*) from crm_graduate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update crm_graduate
+    <set >
+      <if test="record.granduateid != null" >
+        granduateId = #{record.granduateid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.studentid != null" >
+        studentId = #{record.studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyname != null" >
+        companyName = #{record.companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.salary != null" >
+        salary = #{record.salary,jdbcType=VARCHAR},
+      </if>
+      <if test="record.post != null" >
+        post = #{record.post,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entrytime != null" >
+        entryTime = #{record.entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classid != null" >
+        classId = #{record.classid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update crm_graduate
+    set granduateId = #{record.granduateid,jdbcType=VARCHAR},
+      studentId = #{record.studentid,jdbcType=VARCHAR},
+      companyName = #{record.companyname,jdbcType=VARCHAR},
+      salary = #{record.salary,jdbcType=VARCHAR},
+      post = #{record.post,jdbcType=VARCHAR},
+      entryTime = #{record.entrytime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      classId = #{record.classid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wuhongyu.entity.CrmGraduate" >
+    update crm_graduate
+    <set >
+      <if test="studentid != null" >
+        studentId = #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        companyName = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null" >
+        salary = #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="post != null" >
+        post = #{post,jdbcType=VARCHAR},
+      </if>
+      <if test="entrytime != null" >
+        entryTime = #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        classId = #{classid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where granduateId = #{granduateid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wuhongyu.entity.CrmGraduate" >
+    update crm_graduate
+    set studentId = #{studentid,jdbcType=VARCHAR},
+      companyName = #{companyname,jdbcType=VARCHAR},
+      salary = #{salary,jdbcType=VARCHAR},
+      post = #{post,jdbcType=VARCHAR},
+      entryTime = #{entrytime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      classId = #{classid,jdbcType=VARCHAR}
+    where granduateId = #{granduateid,jdbcType=VARCHAR}
+  </update>
+</mapper>

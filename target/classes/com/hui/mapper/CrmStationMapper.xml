@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wuhongyu.mapper.CrmStationMapper" >
+  <resultMap id="BaseResultMap" type="com.wuhongyu.entity.CrmStation" >
+    <id column="stationId" property="stationid" jdbcType="VARCHAR" />
+    <result column="studentId" property="studentid" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="staffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="beforeClassId" property="beforeclassid" jdbcType="VARCHAR" />
+    <result column="afterClassId" property="afterclassid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    stationId, studentId, flag, staffId, createDate, beforeClassId, afterClassId
+  </sql>
+  
+  <select id="selectAll" resultType="com.wuhongyu.entity.CrmStationCustom">
+	SELECT 
+	station.*,
+	staff.staffName,
+	student.name AS studentName,
+	class1.name AS beforeClassName,
+	class2.name AS afterClassName
+	FROM
+	crm_station as station 
+	INNER JOIN crm_student AS student ON station.studentId = student.studentId
+	INNER JOIN crm_staff AS staff ON station.staffId = staff.staffId
+	INNER JOIN crm_class AS class1 ON station.beforeClassId = class1.classId 
+	INNER JOIN crm_class AS class2 ON station.afterClassId = class2.classId
+  </select>
+  
+  
+  
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wuhongyu.entity.CrmStationExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crm_station
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_station
+    where stationId = #{stationid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from crm_station
+    where stationId = #{stationid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wuhongyu.entity.CrmStationExample" >
+    delete from crm_station
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wuhongyu.entity.CrmStation" >
+    insert into crm_station (stationId, studentId, flag, 
+      staffId, createDate, beforeClassId, 
+      afterClassId)
+    values (#{stationid,jdbcType=VARCHAR}, #{studentid,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR}, 
+      #{staffid,jdbcType=VARCHAR}, #{createdate,jdbcType=TIMESTAMP}, #{beforeclassid,jdbcType=VARCHAR}, 
+      #{afterclassid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wuhongyu.entity.CrmStation" >
+    insert into crm_station
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stationid != null" >
+        stationId,
+      </if>
+      <if test="studentid != null" >
+        studentId,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="staffid != null" >
+        staffId,
+      </if>
+      <if test="createdate != null" >
+        createDate,
+      </if>
+      <if test="beforeclassid != null" >
+        beforeClassId,
+      </if>
+      <if test="afterclassid != null" >
+        afterClassId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stationid != null" >
+        #{stationid,jdbcType=VARCHAR},
+      </if>
+      <if test="studentid != null" >
+        #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beforeclassid != null" >
+        #{beforeclassid,jdbcType=VARCHAR},
+      </if>
+      <if test="afterclassid != null" >
+        #{afterclassid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wuhongyu.entity.CrmStationExample" resultType="java.lang.Integer" >
+    select count(*) from crm_station
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update crm_station
+    <set >
+      <if test="record.stationid != null" >
+        stationId = #{record.stationid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.studentid != null" >
+        studentId = #{record.studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.staffid != null" >
+        staffId = #{record.staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdate != null" >
+        createDate = #{record.createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.beforeclassid != null" >
+        beforeClassId = #{record.beforeclassid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.afterclassid != null" >
+        afterClassId = #{record.afterclassid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update crm_station
+    set stationId = #{record.stationid,jdbcType=VARCHAR},
+      studentId = #{record.studentid,jdbcType=VARCHAR},
+      flag = #{record.flag,jdbcType=VARCHAR},
+      staffId = #{record.staffid,jdbcType=VARCHAR},
+      createDate = #{record.createdate,jdbcType=TIMESTAMP},
+      beforeClassId = #{record.beforeclassid,jdbcType=VARCHAR},
+      afterClassId = #{record.afterclassid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wuhongyu.entity.CrmStation" >
+    update crm_station
+    <set >
+      <if test="studentid != null" >
+        studentId = #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        staffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        createDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beforeclassid != null" >
+        beforeClassId = #{beforeclassid,jdbcType=VARCHAR},
+      </if>
+      <if test="afterclassid != null" >
+        afterClassId = #{afterclassid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where stationId = #{stationid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wuhongyu.entity.CrmStation" >
+    update crm_station
+    set studentId = #{studentid,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      staffId = #{staffid,jdbcType=VARCHAR},
+      createDate = #{createdate,jdbcType=TIMESTAMP},
+      beforeClassId = #{beforeclassid,jdbcType=VARCHAR},
+      afterClassId = #{afterclassid,jdbcType=VARCHAR}
+    where stationId = #{stationid,jdbcType=VARCHAR}
+  </update>
+</mapper>

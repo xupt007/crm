@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wuhongyu.mapper.CrmRunoffMapper" >
+  <resultMap id="BaseResultMap" type="com.wuhongyu.entity.CrmRunoff" >
+    <id column="runoffId" property="runoffid" jdbcType="VARCHAR" />
+    <result column="studentId" property="studentid" jdbcType="VARCHAR" />
+    <result column="staffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="isRefund" property="isrefund" jdbcType="VARCHAR" />
+    <result column="refundAmount" property="refundamount" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    runoffId, studentId, staffId, createDate, isRefund, refundAmount, remark
+  </sql>
+  
+  
+  <select id="selectAll" resultType="com.wuhongyu.entity.CrmRunoffCustom">
+  SELECT
+  runoff.*,
+  staff.staffName,
+  student.name AS studentName,
+  student.qq,
+  student.telephone,
+  class.name AS className
+  FROM
+  crm_runoff AS runoff
+  INNER JOIN crm_staff AS staff ON runoff.staffId = staff.staffId
+  INNER JOIN crm_student AS student ON runoff.studentId = student.studentId
+  INNER JOIN crm_class AS class ON student.classId = class.classId
+  
+  </select>
+  
+  
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wuhongyu.entity.CrmRunoffExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crm_runoff
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_runoff
+    where runoffId = #{runoffid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from crm_runoff
+    where runoffId = #{runoffid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wuhongyu.entity.CrmRunoffExample" >
+    delete from crm_runoff
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wuhongyu.entity.CrmRunoff" >
+    insert into crm_runoff (runoffId, studentId, staffId, 
+      createDate, isRefund, refundAmount, 
+      remark)
+    values (#{runoffid,jdbcType=VARCHAR}, #{studentid,jdbcType=VARCHAR}, #{staffid,jdbcType=VARCHAR}, 
+      #{createdate,jdbcType=TIMESTAMP}, #{isrefund,jdbcType=VARCHAR}, #{refundamount,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wuhongyu.entity.CrmRunoff" >
+    insert into crm_runoff
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="runoffid != null" >
+        runoffId,
+      </if>
+      <if test="studentid != null" >
+        studentId,
+      </if>
+      <if test="staffid != null" >
+        staffId,
+      </if>
+      <if test="createdate != null" >
+        createDate,
+      </if>
+      <if test="isrefund != null" >
+        isRefund,
+      </if>
+      <if test="refundamount != null" >
+        refundAmount,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="runoffid != null" >
+        #{runoffid,jdbcType=VARCHAR},
+      </if>
+      <if test="studentid != null" >
+        #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isrefund != null" >
+        #{isrefund,jdbcType=VARCHAR},
+      </if>
+      <if test="refundamount != null" >
+        #{refundamount,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wuhongyu.entity.CrmRunoffExample" resultType="java.lang.Integer" >
+    select count(*) from crm_runoff
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update crm_runoff
+    <set >
+      <if test="record.runoffid != null" >
+        runoffId = #{record.runoffid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.studentid != null" >
+        studentId = #{record.studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.staffid != null" >
+        staffId = #{record.staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdate != null" >
+        createDate = #{record.createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isrefund != null" >
+        isRefund = #{record.isrefund,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refundamount != null" >
+        refundAmount = #{record.refundamount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update crm_runoff
+    set runoffId = #{record.runoffid,jdbcType=VARCHAR},
+      studentId = #{record.studentid,jdbcType=VARCHAR},
+      staffId = #{record.staffid,jdbcType=VARCHAR},
+      createDate = #{record.createdate,jdbcType=TIMESTAMP},
+      isRefund = #{record.isrefund,jdbcType=VARCHAR},
+      refundAmount = #{record.refundamount,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wuhongyu.entity.CrmRunoff" >
+    update crm_runoff
+    <set >
+      <if test="studentid != null" >
+        studentId = #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        staffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        createDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isrefund != null" >
+        isRefund = #{isrefund,jdbcType=VARCHAR},
+      </if>
+      <if test="refundamount != null" >
+        refundAmount = #{refundamount,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where runoffId = #{runoffid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wuhongyu.entity.CrmRunoff" >
+    update crm_runoff
+    set studentId = #{studentid,jdbcType=VARCHAR},
+      staffId = #{staffid,jdbcType=VARCHAR},
+      createDate = #{createdate,jdbcType=TIMESTAMP},
+      isRefund = #{isrefund,jdbcType=VARCHAR},
+      refundAmount = #{refundamount,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where runoffId = #{runoffid,jdbcType=VARCHAR}
+  </update>
+</mapper>
